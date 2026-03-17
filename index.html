@@ -1,108 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Open in browser</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open Page</title>
+  <style>
+    :root{
+      --bg:#0b0b10;
+      --card:#15151d;
+      --card-2:#1d1d28;
+      --text:#ffffff;
+      --muted:#b8b8c7;
+      --accent:#ff2f7d;
+      --accent-2:#ff5ea1;
+      --border:rgba(255,255,255,0.08);
+      --shadow:0 20px 60px rgba(0,0,0,0.45);
+      --radius:22px;
+    }
 
-<style>
-body {
-  margin:0;
-  background:#0a0a0a;
-  font-family:Arial, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  color:white;
-}
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:
+        radial-gradient(circle at top, rgba(255,47,125,0.12), transparent 28%),
+        linear-gradient(180deg, #0b0b10 0%, #09090d 100%);
+      color:var(--text);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      min-height:100%;
+    }
 
-.box {
-  text-align:center;
-  max-width:340px;
-}
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-.icon {
-  font-size:50px;
-  margin-bottom:20px;
-  opacity:0.9;
-}
+    .page{
+      width:100%;
+      max-width:420px;
+      position:relative;
+    }
 
-.title {
-  font-size:20px;
-  font-weight:bold;
-  margin-bottom:10px;
-}
+    .main-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border:1px solid var(--border);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
 
-.subtitle {
-  font-size:14px;
-  color:#aaa;
-  margin-bottom:25px;
-}
+    .hero{
+      padding:28px 24px 20px;
+      text-align:center;
+      border-bottom:1px solid var(--border);
+    }
 
-.link-box {
-  background:#1c1c1c;
-  padding:12px;
-  border-radius:10px;
-  font-size:13px;
-  color:#ccc;
-  word-break:break-all;
-  margin-bottom:20px;
-}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,47,125,0.12);
+      color:#ffd6e6;
+      font-size:13px;
+      border:1px solid rgba(255,47,125,0.28);
+      margin-bottom:14px;
+    }
 
-.btn {
-  width:100%;
-  padding:14px;
-  background:#ff2e7a;
-  border:none;
-  border-radius:10px;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  transition:0.2s;
-}
+    .hero h1{
+      margin:0 0 8px;
+      font-size:30px;
+      line-height:1.1;
+      letter-spacing:-0.02em;
+    }
 
-.btn:hover {
-  background:#e0266a;
-}
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+    }
 
-.arrow {
-  margin-top:20px;
-  font-size:30px;
-  animation:bounce 1.2s infinite;
-}
+    .links{
+      padding:18px;
+      display:grid;
+      gap:12px;
+    }
 
-@keyframes bounce {
-  0%,100% {transform:translateY(0);}
-  50% {transform:translateY(10px);}
-}
-</style>
+    .link-btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      text-decoration:none;
+      color:var(--text);
+      background:linear-gradient(180deg, var(--card-2), var(--card));
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:16px 16px;
+      transition:transform .18s ease, border-color .18s ease, background .18s ease;
+    }
 
+    .link-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,0.16);
+      background:linear-gradient(180deg, #262634, #1a1a24);
+    }
+
+    .left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,0.05);
+      font-size:18px;
+      flex:0 0 auto;
+    }
+
+    .meta{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .title{
+      font-weight:700;
+      font-size:15px;
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .arrow{
+      color:#e4e4ef;
+      font-size:18px;
+      opacity:0.85;
+    }
+
+    /* Overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(4,4,8,0.76);
+      backdrop-filter: blur(8px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:999;
+      opacity:1;
+      visibility:visible;
+      transition:opacity .28s ease, visibility .28s ease;
+    }
+
+    .overlay.hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    .overlay-card{
+      width:100%;
+      max-width:390px;
+      background:linear-gradient(180deg, #171720, #111118);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:26px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.55);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .overlay-top{
+      padding:18px 18px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .countdown{
+      font-size:13px;
+      color:var(--muted);
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.06);
+      padding:8px 10px;
+      border-radius:999px;
+      min-width:92px;
+      text-align:center;
+    }
+
+    .close-btn{
+      width:38px;
+      height:38px;
+      border:none;
+      border-radius:12px;
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      font-size:18px;
+      cursor:pointer;
+    }
+
+    .overlay-body{
+      padding:4px 22px 24px;
+      text-align:center;
+    }
+
+    .pulse-wrap{
+      display:flex;
+      justify-content:center;
+      margin:4px 0 14px;
+    }
+
+    .pulse{
+      width:78px;
+      height:78px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      font-size:34px;
+      background:radial-gradient(circle, rgba(255,94,161,0.32), rgba(255,47,125,0.14));
+      position:relative;
+      animation:pulse 1.6s infinite;
+      box-shadow:0 0 0 0 rgba(255,47,125,0.35);
+    }
+
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(255,47,125,0.35)}
+      70%{box-shadow:0 0 0 24px rgba(255,47,125,0)}
+      100%{box-shadow:0 0 0 0 rgba(255,47,125,0)}
+    }
+
+    .overlay-body h2{
+      margin:0 0 8px;
+      font-size:26px;
+      line-height:1.15;
+    }
+
+    .overlay-body .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .steps{
+      display:grid;
+      gap:10px;
+      margin:0 0 18px;
+      text-align:left;
+    }
+
+    .step{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:18px;
+      padding:12px 13px;
+      opacity:0;
+      transform:translateY(10px);
+      animation:stepIn .45s forwards;
+    }
+
+    .step:nth-child(1){animation-delay:.2s}
+    .step:nth-child(2){animation-delay:.8s}
+    .step:nth-child(3){animation-delay:1.4s}
+
+    @keyframes stepIn{
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .step-num{
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,47,125,0.16);
+      color:#ffd4e5;
+      font-size:13px;
+      font-weight:700;
+      flex:0 0 auto;
+    }
+
+    .step-text{
+      font-size:14px;
+      line-height:1.5;
+      color:#f3f3f7;
+    }
+
+    .step-text span{
+      color:var(--muted);
+      display:block;
+      font-size:12px;
+      margin-top:2px;
+    }
+
+    .overlay-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .primary-btn, .secondary-btn{
+      width:100%;
+      border:none;
+      border-radius:16px;
+      padding:14px 16px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .primary-btn{
+      background:linear-gradient(180deg, var(--accent), #e72671);
+      color:#fff;
+    }
+
+    .secondary-btn{
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .small-note{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    @media (max-width: 420px){
+      .hero h1{font-size:27px}
+      .overlay-body h2{font-size:23px}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="page">
+    <div class="main-card">
+      <div class="hero">
+        <div class="badge">✨ Private links & social pages</div>
+        <h1>Welcome</h1>
+        <p>Use the buttons below to open pages and social profiles.</p>
+      </div>
 
-<div class="box">
+      <div class="links">
+        <!-- REPLACE THESE LINKS -->
+        <a class="link-btn" href="https://fanvue.com/lunafrost" target="_blank" rel="noopener noreferrer">
+          <div class="left">
+            <div class="icon">🔒</div>
+            <div class="meta">
+              <div class="title">VIP Page</div>
+              <div class="sub">Open private page</div>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
 
-<div class="icon">🔒</div>
+        <a class="link-btn" href="https://instagram.com/lunaa_frostt" target="_blank" rel="noopener noreferrer">
+          <div class="left">
+            <div class="icon">📸</div>
+            <div class="meta">
+              <div class="title">Instagram</div>
+              <div class="sub">Open profile</div>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
 
-<div class="title">Open this link in your browser</div>
+        <a class="link-btn" href="https://tiktok.com/@lunaa.frost" target="_blank" rel="noopener noreferrer">
+          <div class="left">
+            <div class="icon">🎵</div>
+            <div class="meta">
+              <div class="title">TikTok</div>
+              <div class="sub">Open profile</div>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+      </div>
+    </div>
+  </div>
 
-<div class="subtitle">
-TikTok can't open this page directly.<br>
-Copy and open it in Safari / Chrome
-</div>
+  <!-- INTRO OVERLAY -->
+  <div class="overlay" id="introOverlay">
+    <div class="overlay-card">
+      <div class="overlay-top">
+        <div class="countdown" id="countdown">Closing in 5s</div>
+        <button class="close-btn" id="closeOverlayBtn" aria-label="Close">✕</button>
+      </div>
 
-<div class="link-box">
-fanvue.com/yourpage
-</div>
+      <div class="overlay-body">
+        <div class="pulse-wrap">
+          <div class="pulse">⬇️</div>
+        </div>
 
-<a href="ВСТАВЬ_СВОЮ_ССЫЛКУ_FANVUE" target="_blank">
-  <button class="btn">OPEN FANVUE 🔞</button>
-</a>
+        <h2>How to open links</h2>
+        <p class="lead">
+          Some pages may open differently on different apps.<br>
+          Follow these steps if a page does not open right away.
+        </p>
 
-<div class="arrow">⬇️</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              Tap the button you want to open
+              <span>Choose VIP Page, Instagram, TikTok, or any other link.</span>
+            </div>
+          </div>
 
-</div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              Copy the link if needed
+              <span>If the page does not open, copy the link shown by your browser or page.</span>
+            </div>
+          </div>
 
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              Open it in your browser
+              <span>Paste the link into Safari, Chrome, or another browser.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="overlay-actions">
+          <button class="primary-btn" id="continueBtn">Continue</button>
+          <button class="secondary-btn" id="skipNowBtn">Close now</button>
+        </div>
+
+        <div class="small-note">
+          This message closes automatically after a few seconds.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('introOverlay');
+    const closeBtn = document.getElementById('closeOverlayBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    const skipNowBtn = document.getElementById('skipNowBtn');
+    const countdown = document.getElementById('countdown');
+
+    let seconds = 5;
+    countdown.textContent = `Closing in ${seconds}s`;
+
+    const timer = setInterval(() => {
+      seconds -= 1;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        closeOverlay();
+      } else {
+        countdown.textContent = `Closing in ${seconds}s`;
+      }
+    }, 1000);
+
+    function closeOverlay() {
+      overlay.classList.add('hidden');
+    }
+
+    closeBtn.addEventListener('click', () => {
+      clearInterval(timer);
+      closeOverlay();
+    });
+
+    continueBtn.addEventListener('click', () => {
+      clearInterval(timer);
+      closeOverlay();
+    });
+
+    skipNowBtn.addEventListener('click', () => {
+      clearInterval(timer);
+      closeOverlay();
+    });
+  </script>
 </body>
 </html>
