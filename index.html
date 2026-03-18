@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Link Page</title>
+<title>Open Page</title>
 
 <style>
 body{
   margin:0;
-  background:#0b0b10;
-  font-family:Arial;
+  background:#0a0a0f;
+  font-family:Inter, Arial;
   color:white;
+  overflow:hidden;
 }
 
 /* MAIN PAGE */
@@ -23,21 +24,23 @@ body{
 }
 
 .link{
-  background:#1a1a22;
-  padding:15px;
+  background:linear-gradient(145deg,#1a1a25,#111);
+  padding:16px;
   margin:10px;
-  border-radius:15px;
+  border-radius:16px;
   text-decoration:none;
   color:white;
   width:260px;
   text-align:center;
+  font-weight:600;
 }
 
 /* OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
+  background:rgba(5,5,10,0.95);
+  backdrop-filter:blur(10px);
   display:flex;
   justify-content:center;
   align-items:center;
@@ -45,38 +48,54 @@ body{
 }
 
 .box{
-  background:#111;
-  padding:20px;
-  border-radius:20px;
   width:90%;
   max-width:340px;
   text-align:center;
-  position:relative;
+}
+
+/* PROGRESS BAR */
+.progress{
+  position:absolute;
+  top:0;
+  left:0;
+  height:4px;
+  width:100%;
+  background:#222;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ff2f7d,#ff5ea1);
+  animation:load 10s linear forwards;
+}
+
+@keyframes load{
+  to{width:100%;}
 }
 
 /* CLOSE */
 .close{
   position:absolute;
-  top:10px;
-  right:15px;
+  top:15px;
+  right:20px;
   font-size:20px;
+  opacity:0.7;
   cursor:pointer;
 }
 
-/* TIMER */
-.timer{
-  position:absolute;
-  top:10px;
-  left:15px;
-  font-size:14px;
-  opacity:0.6;
+/* TITLE */
+h2{
+  margin-top:50px;
+  font-size:22px;
 }
 
 /* STEPS */
 .step{
-  margin:12px 0;
   opacity:0;
-  animation:fade 0.5s forwards;
+  margin:15px 0;
+  font-size:16px;
+  animation:fade 0.6s forwards;
 }
 
 .step:nth-child(3){animation-delay:1s;}
@@ -87,30 +106,17 @@ body{
   to{opacity:1;}
 }
 
-/* BUTTONS */
-.buttons{
-  margin-top:15px;
-  display:flex;
-  gap:10px;
-}
-
+/* BUTTON */
 button{
-  flex:1;
-  padding:12px;
+  margin-top:25px;
+  padding:14px;
+  width:100%;
   border:none;
-  border-radius:10px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#ff2f7d,#e72671);
+  color:white;
   font-weight:bold;
-  cursor:pointer;
-}
-
-.continue{
-  background:#ff2f7d;
-  color:white;
-}
-
-.back{
-  background:#333;
-  color:white;
+  font-size:15px;
 }
 </style>
 </head>
@@ -118,50 +124,40 @@ button{
 <body>
 
 <div class="main">
-  <a class="link" href="#">🔥 VIP PAGE</a>
-  <a class="link" href="#">📸 Instagram</a>
-  <a class="link" href="#">🎵 TikTok</a>
+  <a class="link" href="https://fanvue.com/lunafrost" target="_blank">🔥 VIP PAGE</a>
+  <a class="link" href="https://instagram.com/lunaa_frostt" target="_blank">📸 Instagram</a>
+  <a class="link" href="https://tiktok.com/@lunaa.frost" target="_blank">🎵 TikTok</a>
 </div>
 
 <!-- OVERLAY -->
 <div class="overlay" id="overlay">
 
-<div class="box">
+<div class="progress">
+  <div class="progress-bar"></div>
+</div>
 
-<div class="timer" id="timer">10s</div>
 <div class="close" onclick="closeOverlay()">✕</div>
 
-<h2>How to open link</h2>
+<div class="box">
 
-<div class="step">1. Copy the link</div>
-<div class="step">2. Open browser</div>
-<div class="step">3. Paste and open</div>
+<h2>Open in browser</h2>
 
-<div class="buttons">
-  <button class="back" onclick="closeOverlay()">Back</button>
-  <button class="continue" onclick="closeOverlay()">Continue</button>
-</div>
+<div class="step">1. Copy this link</div>
+<div class="step">2. Open your browser</div>
+<div class="step">3. Paste & continue</div>
+
+<button onclick="closeOverlay()">Continue</button>
 
 </div>
 </div>
 
 <script>
-let time = 10;
-const timer = document.getElementById("timer");
-const overlay = document.getElementById("overlay");
-
-const countdown = setInterval(()=>{
-  time--;
-  timer.innerText = time + "s";
-
-  if(time <= 0){
-    clearInterval(countdown);
-    closeOverlay();
-  }
-},1000);
+setTimeout(()=>{
+  closeOverlay();
+},10000);
 
 function closeOverlay(){
-  overlay.style.display = "none";
+  document.getElementById("overlay").style.display="none";
 }
 </script>
 
