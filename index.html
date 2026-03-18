@@ -12,8 +12,8 @@
       padding: 0;
       width: 100%;
       min-height: 100%;
-      font-family: Arial, sans-serif;
       background: transparent;
+      font-family: Arial, sans-serif;
       overflow-x: hidden;
     }
 
@@ -21,24 +21,22 @@
       min-height: 100vh;
     }
 
-    /* Transparent page so original LinkMe behind stays visible */
     .page {
       min-height: 100vh;
-      position: relative;
       background: transparent;
+      position: relative;
     }
 
-    /* Tutorial overlay */
     .tutorial {
       position: fixed;
       left: 14px;
       right: 14px;
-      top: 70px;
+      top: 72px;
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(0, 0, 0, 0.74);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 24px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.34);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       padding: 16px 16px 18px;
@@ -62,8 +60,8 @@
       font-weight: 800;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      text-align: center;
       color: #fff;
+      text-align: center;
     }
 
     .close-btn {
@@ -82,7 +80,7 @@
 
     .slide {
       position: relative;
-      height: 190px;
+      height: 205px;
       border-radius: 18px;
       overflow: hidden;
       background: rgba(255,255,255,0.06);
@@ -139,12 +137,6 @@
       border-top-right-radius: 18px;
       padding: 14px 18px 16px;
       box-shadow: 0 -8px 24px rgba(0,0,0,0.18);
-      transform: translateY(100%);
-      opacity: 0;
-    }
-
-    .menu-sheet.show {
-      animation: sheetUp 0.75s ease forwards;
     }
 
     .menu-item {
@@ -161,25 +153,41 @@
       border-bottom: none;
     }
 
-    /* Small animated arrows */
+    .highlight-copy {
+      background: rgba(255, 67, 67, 0.10);
+      border-radius: 10px;
+      padding-left: 6px;
+      padding-right: 6px;
+      font-weight: 800;
+    }
+
+    .highlight-browser {
+      background: rgba(79, 122, 255, 0.10);
+      border-radius: 10px;
+      padding-left: 6px;
+      padding-right: 6px;
+      font-weight: 800;
+    }
+
     .arrow-wrap {
       position: absolute;
       display: flex;
       align-items: center;
       gap: 6px;
-      animation: floatArrow 1s ease-in-out infinite;
       z-index: 5;
+      animation: floatArrow 1s ease-in-out infinite;
     }
 
     .arrow-label {
       background: #ff2a2a;
       color: white;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       padding: 5px 8px;
       border-radius: 8px;
       line-height: 1;
       box-shadow: 0 8px 18px rgba(255,42,42,0.28);
+      white-space: nowrap;
     }
 
     .arrow-shape {
@@ -192,7 +200,13 @@
 
     .arrow-dots {
       right: 18px;
-      top: 42px;
+      top: 38px;
+      transform: rotate(-8deg);
+    }
+
+    .arrow-copy {
+      right: 48px;
+      top: 130px;
       transform: rotate(-8deg);
     }
 
@@ -205,7 +219,7 @@
     .check-wrap {
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.86);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -243,7 +257,8 @@
     }
 
     .step:nth-child(1) { animation-delay: 0.2s; }
-    .step:nth-child(2) { animation-delay: 0.5s; }
+    .step:nth-child(2) { animation-delay: 0.45s; }
+    .step:nth-child(3) { animation-delay: 0.7s; }
 
     .step-num {
       width: 36px;
@@ -319,11 +334,6 @@
       50% { transform: translateY(-6px) rotate(-8deg); }
     }
 
-    @keyframes sheetUp {
-      from { transform: translateY(100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
     @keyframes popCheck {
       0% { transform: scale(0.7); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
@@ -337,7 +347,7 @@
       }
 
       .slide {
-        height: 178px;
+        height: 186px;
       }
 
       .tutorial-title {
@@ -357,8 +367,9 @@
         font-size: 24px;
       }
 
-      .arrow-browser {
-        right: 38px;
+      .arrow-browser,
+      .arrow-copy {
+        right: 36px;
       }
     }
   </style>
@@ -372,7 +383,7 @@
       </div>
 
       <div class="slide">
-        <!-- Frame 1 -->
+        <!-- 1: tap dots -->
         <div class="slide-frame active" id="frame1">
           <div class="demo-ui">
             <div class="demo-topbar">
@@ -389,7 +400,7 @@
           </div>
         </div>
 
-        <!-- Frame 2 -->
+        <!-- 2: copy link -->
         <div class="slide-frame" id="frame2">
           <div class="demo-ui">
             <div class="demo-topbar">
@@ -399,9 +410,32 @@
             </div>
             <div class="demo-url">link page</div>
 
-            <div class="menu-sheet" id="menuSheet">
+            <div class="menu-sheet">
               <div class="menu-item">⚑ Report</div>
-              <div class="menu-item"><strong>🌐 Open in browser</strong></div>
+              <div class="menu-item">🌐 Open in browser</div>
+              <div class="menu-item"><span class="highlight-copy">🔗 Copy Link</span></div>
+            </div>
+
+            <div class="arrow-wrap arrow-copy">
+              <div class="arrow-label">HERE</div>
+              <div class="arrow-shape">➜</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3: open in browser -->
+        <div class="slide-frame" id="frame3">
+          <div class="demo-ui">
+            <div class="demo-topbar">
+              <span>←</span>
+              <span>×</span>
+              <span>⋯</span>
+            </div>
+            <div class="demo-url">link page</div>
+
+            <div class="menu-sheet">
+              <div class="menu-item">⚑ Report</div>
+              <div class="menu-item"><span class="highlight-browser">🌐 Open in browser</span></div>
               <div class="menu-item">🔗 Copy Link</div>
             </div>
 
@@ -412,8 +446,8 @@
           </div>
         </div>
 
-        <!-- Frame 3 -->
-        <div class="slide-frame" id="frame3">
+        <!-- 4: done -->
+        <div class="slide-frame" id="frame4">
           <div class="check-wrap">
             <div class="check-circle">✓</div>
           </div>
@@ -427,7 +461,11 @@
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-text">Choose "Open in browser"</div>
+          <div class="step-text">Choose "Copy Link"</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">Paste it or open in browser</div>
         </div>
       </div>
 
@@ -442,26 +480,18 @@
     const tutorial = document.getElementById('tutorial');
     const closeBtn = document.getElementById('closeBtn');
     const gotItBtn = document.getElementById('gotItBtn');
-    const frame1 = document.getElementById('frame1');
-    const frame2 = document.getElementById('frame2');
-    const frame3 = document.getElementById('frame3');
-    const menuSheet = document.getElementById('menuSheet');
 
-    function showFrame(frameToShow) {
-      [frame1, frame2, frame3].forEach(frame => frame.classList.remove('active'));
-      frameToShow.classList.add('active');
+    const frames = [
+      document.getElementById('frame1'),
+      document.getElementById('frame2'),
+      document.getElementById('frame3'),
+      document.getElementById('frame4')
+    ];
+
+    function showFrame(index) {
+      frames.forEach(frame => frame.classList.remove('active'));
+      frames[index].classList.add('active');
     }
-
-    setTimeout(() => {
-      showFrame(frame2);
-      setTimeout(() => {
-        menuSheet.classList.add('show');
-      }, 150);
-    }, 3000);
-
-    setTimeout(() => {
-      showFrame(frame3);
-    }, 6800);
 
     function closeTutorial() {
       tutorial.classList.add('hidden');
@@ -470,9 +500,10 @@
     closeBtn.addEventListener('click', closeTutorial);
     gotItBtn.addEventListener('click', closeTutorial);
 
-    setTimeout(() => {
-      closeTutorial();
-    }, 10000);
+    setTimeout(() => showFrame(1), 2500); // copy link
+    setTimeout(() => showFrame(2), 5000); // open in browser
+    setTimeout(() => showFrame(3), 7600); // done
+    setTimeout(() => closeTutorial(), 10000); // close
   </script>
 </body>
 </html>
