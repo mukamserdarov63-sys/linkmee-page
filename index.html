@@ -1,143 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Open Page</title>
-  <style>
-    :root{
-      --bg:#0b0b10;
-      --card:#15151d;
-      --card-2:#1d1d28;
-      --text:#ffffff;
-      --muted:#b8b8c7;
-      --accent:#ff2f7d;
-      --accent-2:#ff5ea1;
-      --border:rgba(255,255,255,0.08);
-      --shadow:0 20px 60px rgba(0,0,0,0.45);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Page</title>
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:#0b0b10;
-      color:white;
-      font-family:Arial;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-    }
+<style>
+body{
+  margin:0;
+  background:#0b0b10;
+  font-family:Arial;
+  color:white;
+}
 
-    .main{
-      width:100%;
-      max-width:400px;
-    }
+/* MAIN PAGE */
+.main{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
 
-    .link{
-      display:flex;
-      justify-content:space-between;
-      padding:15px;
-      margin:10px;
-      background:#1a1a22;
-      border-radius:15px;
-      text-decoration:none;
-      color:white;
-    }
+.link{
+  background:#1a1a22;
+  padding:15px;
+  margin:10px;
+  border-radius:15px;
+  text-decoration:none;
+  color:white;
+  width:260px;
+  text-align:center;
+}
 
-    /* OVERLAY */
-    .overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.8);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:999;
-    }
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
 
-    .card{
-      background:#111;
-      padding:20px;
-      border-radius:20px;
-      text-align:center;
-      width:90%;
-      max-width:350px;
-    }
+.box{
+  background:#111;
+  padding:20px;
+  border-radius:20px;
+  width:90%;
+  max-width:340px;
+  text-align:center;
+  position:relative;
+}
 
-    .count{
-      font-size:14px;
-      margin-bottom:10px;
-      opacity:0.7;
-    }
+/* CLOSE */
+.close{
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:20px;
+  cursor:pointer;
+}
 
-    .steps{
-      text-align:left;
-      margin-top:15px;
-    }
+/* TIMER */
+.timer{
+  position:absolute;
+  top:10px;
+  left:15px;
+  font-size:14px;
+  opacity:0.6;
+}
 
-    .step{
-      margin:10px 0;
-    }
+/* STEPS */
+.step{
+  margin:12px 0;
+  opacity:0;
+  animation:fade 0.5s forwards;
+}
 
-    button{
-      margin-top:15px;
-      padding:10px;
-      width:100%;
-      border:none;
-      border-radius:10px;
-      background:#ff2f7d;
-      color:white;
-      font-weight:bold;
-    }
+.step:nth-child(3){animation-delay:1s;}
+.step:nth-child(4){animation-delay:2s;}
+.step:nth-child(5){animation-delay:3s;}
 
-    .close{
-      position:absolute;
-      top:10px;
-      right:15px;
-      font-size:20px;
-      cursor:pointer;
-    }
-  </style>
+@keyframes fade{
+  to{opacity:1;}
+}
+
+/* BUTTONS */
+.buttons{
+  margin-top:15px;
+  display:flex;
+  gap:10px;
+}
+
+button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.continue{
+  background:#ff2f7d;
+  color:white;
+}
+
+.back{
+  background:#333;
+  color:white;
+}
+</style>
 </head>
 
 <body>
 
 <div class="main">
-  <a class="link" href="https://fanvue.com/lunafrost" target="_blank">🔥 VIP PAGE →</a>
-  <a class="link" href="https://instagram.com/lunaa_frostt" target="_blank">📸 Instagram →</a>
-  <a class="link" href="https://tiktok.com/@lunaa.frost" target="_blank">🎵 TikTok →</a>
+  <a class="link" href="#">🔥 VIP PAGE</a>
+  <a class="link" href="#">📸 Instagram</a>
+  <a class="link" href="#">🎵 TikTok</a>
 </div>
 
 <!-- OVERLAY -->
 <div class="overlay" id="overlay">
-  <div class="card">
-    <div class="close" onclick="closeOverlay()">✕</div>
-    <div class="count" id="count">Closing in 10s</div>
 
-    <h2>How to open links</h2>
+<div class="box">
 
-    <div class="steps">
-      <div class="step">1. Tap the link</div>
-      <div class="step">2. Copy if not opening</div>
-      <div class="step">3. Paste in browser</div>
-    </div>
+<div class="timer" id="timer">10s</div>
+<div class="close" onclick="closeOverlay()">✕</div>
 
-    <button onclick="closeOverlay()">Continue</button>
-  </div>
+<h2>How to open link</h2>
+
+<div class="step">1. Copy the link</div>
+<div class="step">2. Open browser</div>
+<div class="step">3. Paste and open</div>
+
+<div class="buttons">
+  <button class="back" onclick="closeOverlay()">Back</button>
+  <button class="continue" onclick="closeOverlay()">Continue</button>
+</div>
+
+</div>
 </div>
 
 <script>
-let seconds = 10;
-const count = document.getElementById("count");
+let time = 10;
+const timer = document.getElementById("timer");
 const overlay = document.getElementById("overlay");
 
-const timer = setInterval(()=>{
-  seconds--;
-  count.innerText = "Closing in " + seconds + "s";
+const countdown = setInterval(()=>{
+  time--;
+  timer.innerText = time + "s";
 
-  if(seconds <= 0){
-    clearInterval(timer);
+  if(time <= 0){
+    clearInterval(countdown);
     closeOverlay();
   }
 },1000);
