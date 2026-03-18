@@ -3,163 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LinkMe Tutorial</title>
+  <title>LinkMe Tutorial Overlay</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
       font-family: Arial, sans-serif;
-      color: white;
-      background:
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
-        url("https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80")
-        center/cover no-repeat fixed;
-      min-height: 100vh;
+      background: transparent;
       overflow-x: hidden;
     }
 
+    body {
+      min-height: 100vh;
+    }
+
+    /* Transparent page so original LinkMe behind stays visible */
     .page {
       min-height: 100vh;
-      padding: 28px 18px 40px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .phone {
-      width: 100%;
-      max-width: 420px;
       position: relative;
-    }
-
-    .fake-linkme {
-      position: relative;
-      border-radius: 28px;
-      overflow: hidden;
-      min-height: 88vh;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.65)),
-        url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80")
-        center/cover no-repeat;
-      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
-    }
-
-    .fake-top {
-      text-align: center;
-      padding: 42px 20px 18px;
-    }
-
-    .avatar {
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      margin: 0 auto 14px;
-      border: 3px solid rgba(255,255,255,0.85);
-      background:
-        url("https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=500&q=80")
-        center/cover no-repeat;
-    }
-
-    .name {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .bio {
-      font-size: 14px;
-      color: rgba(255,255,255,0.9);
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
-
-    .main-link {
-      margin: 18px 20px 14px;
-      border-radius: 22px;
-      padding: 22px 18px;
-      text-align: center;
-      background: rgba(15, 8, 20, 0.62);
-      border: 2px solid rgba(255, 35, 163, 0.45);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.05) inset;
-      backdrop-filter: blur(6px);
-    }
-
-    .vip-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      display: inline-block;
-      background: #be4bff;
-      margin-right: 8px;
-      vertical-align: middle;
-      box-shadow: 0 0 14px rgba(190,75,255,0.95);
-    }
-
-    .vip-top {
-      font-size: 14px;
-      letter-spacing: 3px;
-      font-weight: 700;
-      color: #f1d3ff;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
-
-    .vip-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .vip-sub {
-      font-size: 14px;
-      color: rgba(255,255,255,0.88);
-      line-height: 1.4;
-    }
-
-    .socials {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px 0 30px;
-    }
-
-    .social-circle {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.14);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      backdrop-filter: blur(4px);
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 12px;
-      color: rgba(255,255,255,0.55);
-      padding: 0 20px 26px;
-      line-height: 1.5;
+      background: transparent;
     }
 
     /* Tutorial overlay */
     .tutorial {
-      position: absolute;
+      position: fixed;
       left: 14px;
       right: 14px;
-      top: 86px;
-      z-index: 20;
-      background: rgba(0,0,0,0.78);
-      border-radius: 22px;
+      top: 70px;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.72);
       border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       padding: 16px 16px 18px;
-      animation: fadeInUp 0.6s ease;
+      animation: fadeInUp 0.45s ease;
     }
 
     .tutorial.hidden {
@@ -167,52 +50,51 @@
     }
 
     .tutorial-head {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 14px;
     }
 
     .tutorial-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       text-align: center;
+      color: #fff;
     }
 
     .close-btn {
       position: absolute;
       right: 0;
-      top: -2px;
-      width: 44px;
-      height: 44px;
+      top: -4px;
+      width: 46px;
+      height: 46px;
       border: none;
       border-radius: 50%;
       background: rgba(255,255,255,0.12);
       color: white;
-      font-size: 26px;
+      font-size: 28px;
       cursor: pointer;
     }
 
     .slide {
       position: relative;
       height: 190px;
-      border-radius: 16px;
+      border-radius: 18px;
       overflow: hidden;
-      background: #d9d9d9;
+      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
       margin-bottom: 14px;
     }
 
     .slide-frame {
-      width: 100%;
-      height: 100%;
       position: absolute;
       inset: 0;
       opacity: 0;
-      transform: scale(0.98);
+      transform: scale(0.985);
       transition: opacity 0.45s ease, transform 0.45s ease;
     }
 
@@ -225,8 +107,9 @@
       width: 100%;
       height: 100%;
       position: relative;
-      background: linear-gradient(180deg, #f4f4f4, #e8e8e8);
+      background: linear-gradient(180deg, #efefef, #dcdcdc);
       color: #111;
+      overflow: hidden;
     }
 
     .demo-topbar {
@@ -242,8 +125,8 @@
     .demo-url {
       text-align: center;
       font-size: 14px;
-      color: #6f6f6f;
-      margin-top: -2px;
+      color: #6e6e6e;
+      margin-top: -4px;
     }
 
     .menu-sheet {
@@ -254,14 +137,14 @@
       background: white;
       border-top-left-radius: 18px;
       border-top-right-radius: 18px;
-      padding: 16px 18px 18px;
+      padding: 14px 18px 16px;
       box-shadow: 0 -8px 24px rgba(0,0,0,0.18);
       transform: translateY(100%);
       opacity: 0;
     }
 
     .menu-sheet.show {
-      animation: sheetUp 0.8s ease forwards;
+      animation: sheetUp 0.75s ease forwards;
     }
 
     .menu-item {
@@ -271,57 +154,76 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      color: #111;
     }
 
     .menu-item:last-child {
       border-bottom: none;
     }
 
-    .red-arrow {
+    /* Small animated arrows */
+    .arrow-wrap {
       position: absolute;
-      right: 26px;
-      top: 38px;
-      background: #ff2323;
-      color: white;
-      font-weight: 800;
-      padding: 10px 18px;
-      border-radius: 10px;
-      transform: rotate(-18deg);
-      font-size: 22px;
-      box-shadow: 0 8px 18px rgba(255,35,35,0.3);
-      animation: pulseArrow 1.1s infinite;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: floatArrow 1s ease-in-out infinite;
+      z-index: 5;
     }
 
-    .red-arrow.small {
-      right: 52px;
-      top: 86px;
-      transform: rotate(-15deg);
-      font-size: 20px;
-      padding: 8px 16px;
+    .arrow-label {
+      background: #ff2a2a;
+      color: white;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 5px 8px;
+      border-radius: 8px;
+      line-height: 1;
+      box-shadow: 0 8px 18px rgba(255,42,42,0.28);
+    }
+
+    .arrow-shape {
+      color: #ff2a2a;
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 8px 18px rgba(255,42,42,0.25);
+    }
+
+    .arrow-dots {
+      right: 18px;
+      top: 42px;
+      transform: rotate(-8deg);
+    }
+
+    .arrow-browser {
+      right: 48px;
+      top: 92px;
+      transform: rotate(-8deg);
     }
 
     .check-wrap {
       width: 100%;
       height: 100%;
-      background: #000;
+      background: rgba(0,0,0,0.85);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .check-circle {
-      width: 112px;
-      height: 112px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      background: #93f4c4;
+      background: #98f4c5;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
       font-size: 68px;
-      font-weight: 800;
+      font-weight: 900;
+      box-shadow: 0 0 36px rgba(152,244,197,0.32);
       animation: popCheck 0.6s ease;
-      box-shadow: 0 0 40px rgba(147,244,196,0.35);
     }
 
     .steps {
@@ -340,8 +242,8 @@
       animation: stepIn 0.55s forwards;
     }
 
-    .step:nth-child(1) { animation-delay: 0.25s; }
-    .step:nth-child(2) { animation-delay: 0.55s; }
+    .step:nth-child(1) { animation-delay: 0.2s; }
+    .step:nth-child(2) { animation-delay: 0.5s; }
 
     .step-num {
       width: 36px;
@@ -353,6 +255,7 @@
       justify-content: center;
       font-weight: 800;
       font-size: 18px;
+      color: white;
       flex: 0 0 auto;
       box-shadow: 0 6px 16px rgba(195,70,255,0.35);
     }
@@ -368,13 +271,13 @@
       border: none;
       border-radius: 16px;
       padding: 18px 16px;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 800;
       color: white;
       cursor: pointer;
       background: linear-gradient(90deg, #ff39a7, #9f49ff);
-      box-shadow: 0 8px 26px rgba(198,70,255,0.28);
-      animation: glowBtn 1.8s infinite alternate;
+      box-shadow: 0 8px 24px rgba(198,70,255,0.28);
+      animation: glowBtn 1.7s infinite alternate;
     }
 
     .progress {
@@ -393,7 +296,7 @@
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -402,8 +305,8 @@
     }
 
     @keyframes glowBtn {
-      from { box-shadow: 0 8px 26px rgba(198,70,255,0.20); }
-      to { box-shadow: 0 10px 34px rgba(255,57,167,0.40); }
+      from { box-shadow: 0 8px 24px rgba(198,70,255,0.20); }
+      to { box-shadow: 0 10px 32px rgba(255,57,167,0.38); }
     }
 
     @keyframes loadBar {
@@ -411,9 +314,9 @@
       to { width: 100%; }
     }
 
-    @keyframes pulseArrow {
-      0%,100% { transform: rotate(-18deg) scale(1); }
-      50% { transform: rotate(-18deg) scale(1.08); }
+    @keyframes floatArrow {
+      0%,100% { transform: translateY(0) rotate(-8deg); }
+      50% { transform: translateY(-6px) rotate(-8deg); }
     }
 
     @keyframes sheetUp {
@@ -430,11 +333,11 @@
       .tutorial {
         left: 10px;
         right: 10px;
-        top: 70px;
+        top: 62px;
       }
 
       .slide {
-        height: 175px;
+        height: 178px;
       }
 
       .tutorial-title {
@@ -444,94 +347,93 @@
       .step-text {
         font-size: 15px;
       }
+
+      .arrow-label {
+        font-size: 12px;
+        padding: 4px 7px;
+      }
+
+      .arrow-shape {
+        font-size: 24px;
+      }
+
+      .arrow-browser {
+        right: 38px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="phone">
-      <div class="fake-linkme">
-        <div class="fake-top">
-          <div class="avatar"></div>
-          <div class="name">Luna Frost</div>
-          <div class="bio">my private world ✨<br>tap the link below</div>
-        </div>
+    <div class="tutorial" id="tutorial">
+      <div class="tutorial-head">
+        <div class="tutorial-title">FOLLOW THE TUTORIAL 👇</div>
+        <button class="close-btn" id="closeBtn">×</button>
+      </div>
 
-        <div class="main-link">
-          <div class="vip-top"><span class="vip-dot"></span> MEMBERS VIP</div>
-          <div class="vip-title">Exclusive Content ✨</div>
-          <div class="vip-sub">What I don’t post anywhere else...<br>(Limited Spots ⭐)</div>
-        </div>
-
-        <div class="socials">
-          <div class="social-circle">📸</div>
-          <div class="social-circle">🎵</div>
-        </div>
-
-        <div class="footer">
-          Exclusive content for subscribers.<br>
-          All rights reserved © 2026
-        </div>
-
-        <div class="tutorial" id="tutorial">
-          <div class="tutorial-head">
-            <div class="tutorial-title">FOLLOW THE TUTORIAL 👇</div>
-            <button class="close-btn" id="closeBtn">×</button>
-          </div>
-
-          <div class="slide">
-            <div class="slide-frame active" id="frame1">
-              <div class="demo-ui">
-                <div class="demo-topbar">
-                  <span>←</span>
-                  <span>×</span>
-                  <span>⋯</span>
-                </div>
-                <div class="demo-url">privateofficial.site</div>
-                <div class="red-arrow">HERE</div>
-              </div>
+      <div class="slide">
+        <!-- Frame 1 -->
+        <div class="slide-frame active" id="frame1">
+          <div class="demo-ui">
+            <div class="demo-topbar">
+              <span>←</span>
+              <span>×</span>
+              <span>⋯</span>
             </div>
+            <div class="demo-url">link page</div>
 
-            <div class="slide-frame" id="frame2">
-              <div class="demo-ui">
-                <div class="demo-topbar">
-                  <span>←</span>
-                  <span>×</span>
-                  <span>⋯</span>
-                </div>
-                <div class="demo-url">privateofficial.site</div>
-                <div class="menu-sheet" id="menuSheet">
-                  <div class="menu-item">⚑ Relatar</div>
-                  <div class="menu-item"><strong>🌐 Open in browser</strong></div>
-                  <div class="menu-item">🔗 Copy Link</div>
-                </div>
-                <div class="red-arrow small">HERE</div>
-              </div>
-            </div>
-
-            <div class="slide-frame" id="frame3">
-              <div class="check-wrap">
-                <div class="check-circle">✓</div>
-              </div>
+            <div class="arrow-wrap arrow-dots">
+              <div class="arrow-label">HERE</div>
+              <div class="arrow-shape">➜</div>
             </div>
           </div>
+        </div>
 
-          <div class="steps">
-            <div class="step">
-              <div class="step-num">1</div>
-              <div class="step-text">Tap the 3 dots</div>
+        <!-- Frame 2 -->
+        <div class="slide-frame" id="frame2">
+          <div class="demo-ui">
+            <div class="demo-topbar">
+              <span>←</span>
+              <span>×</span>
+              <span>⋯</span>
             </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <div class="step-text">Choose "Open in browser"</div>
-            </div>
-          </div>
+            <div class="demo-url">link page</div>
 
-          <button class="gotit-btn" id="gotItBtn">GOT IT</button>
-          <div class="progress">
-            <div class="progress-bar"></div>
+            <div class="menu-sheet" id="menuSheet">
+              <div class="menu-item">⚑ Report</div>
+              <div class="menu-item"><strong>🌐 Open in browser</strong></div>
+              <div class="menu-item">🔗 Copy Link</div>
+            </div>
+
+            <div class="arrow-wrap arrow-browser">
+              <div class="arrow-label">HERE</div>
+              <div class="arrow-shape">➜</div>
+            </div>
           </div>
         </div>
+
+        <!-- Frame 3 -->
+        <div class="slide-frame" id="frame3">
+          <div class="check-wrap">
+            <div class="check-circle">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">Tap the 3 dots</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">Choose "Open in browser"</div>
+        </div>
+      </div>
+
+      <button class="gotit-btn" id="gotItBtn">GOT IT</button>
+      <div class="progress">
+        <div class="progress-bar"></div>
       </div>
     </div>
   </div>
@@ -554,12 +456,12 @@
       showFrame(frame2);
       setTimeout(() => {
         menuSheet.classList.add('show');
-      }, 180);
+      }, 150);
     }, 3000);
 
     setTimeout(() => {
       showFrame(frame3);
-    }, 6500);
+    }, 6800);
 
     function closeTutorial() {
       tutorial.classList.add('hidden');
