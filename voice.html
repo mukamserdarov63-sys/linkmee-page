@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Голосовой ввод для Claude</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d14;
+      --card: #14141f;
+      --border: rgba(255,255,255,0.08);
+      --accent: #9f49ff;
+      --accent2: #ff39a7;
+      --green: #22d18e;
+      --red: #ff4d6d;
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    /* HEADER */
+    .header { text-align: center; margin-bottom: 28px; }
+
+    .header-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 16px;
+      box-shadow: 0 16px 40px rgba(159,73,255,0.35);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* MIC BUTTON */
+    .mic-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 24px 0;
+    }
+
+    .mic-btn {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+      font-size: 52px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 36px rgba(159,73,255,0.4);
+      transition: transform 0.2s;
+      position: relative;
+    }
+
+    .mic-btn:active { transform: scale(0.95); }
+
+    .mic-btn.recording {
+      background: linear-gradient(135deg, #ff4d6d, #ff8a5c);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,109,0.5); }
+      50% { box-shadow: 0 0 0 22px rgba(255,77,109,0); }
+    }
+
+    .mic-status {
+      margin-top: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+      min-height: 22px;
+      text-align: center;
+    }
+
+    .mic-status.active { color: var(--red); }
+
+    /* TEXT OUTPUT */
+    .output-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .output-box {
+      width: 100%;
+      min-height: 160px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .output-box:focus { border-color: var(--accent); }
+
+    .interim {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
+      box-shadow: 0 8px 24px rgba(159,73,255,0.3);
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover { border-color: var(--red); color: var(--red); }
+
+    .copied-msg {
+      text-align: center;
+      font-size: 14px;
+      color: var(--green);
+      height: 20px;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copied-msg.show { opacity: 1; }
+
+    /* SETTINGS */
+    .settings {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    select option { background: #1a1a2e; }
+
+    /* INFO */
+    .info {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .info strong { color: var(--text); }
+
+    .info code {
+      background: rgba(159,73,255,0.12);
+      color: #c4a0ff;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    /* ERROR */
+    .error-banner {
+      background: rgba(255,77,109,0.1);
+      border: 1px solid rgba(255,77,109,0.3);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 14px;
+      color: var(--red);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-banner.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="header">
+      <div class="header-icon">🎙️</div>
+      <h1>Голосовой ввод для Claude</h1>
+      <p>Говори на русском — текст появится сам.<br>Потом скопируй и вставь в Claude.</p>
+    </div>
+
+    <div class="error-banner" id="error-banner"></div>
+
+    <div class="mic-zone">
+      <button class="mic-btn" id="mic-btn" title="Нажми чтобы говорить">🎤</button>
+      <div class="mic-status" id="mic-status">Нажми на микрофон и говори</div>
+    </div>
+
+    <div class="settings">
+      <div class="setting-item">
+        <span>Язык:</span>
+        <select id="lang-select">
+          <option value="ru-RU" selected>Русский</option>
+          <option value="en-US">English</option>
+          <option value="kk-KZ">Қазақша</option>
+          <option value="uk-UA">Українська</option>
+          <option value="tr-TR">Türkçe</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="output-label">Распознанный текст</div>
+      <textarea class="output-box" id="output" placeholder="Здесь появится твоя речь..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="clearText()">Очистить</button>
+      <button class="btn btn-primary" onclick="copyText()">Скопировать</button>
+    </div>
+
+    <div class="copied-msg" id="copied-msg">Скопировано! Вставь в Claude (Ctrl+V)</div>
+
+    <div class="info">
+      <strong>Как пользоваться:</strong><br>
+      1. Нажми на <strong>микрофон</strong> 🎤<br>
+      2. Говори на русском — текст появится сам<br>
+      3. Нажми микрофон ещё раз чтобы остановить<br>
+      4. Нажми <strong>Скопировать</strong><br>
+      5. Открой Claude и вставь (<code>Ctrl+V</code>)<br><br>
+      <strong>Важно:</strong> работает в браузерах <strong>Chrome</strong> и <strong>Edge</strong>.
+      При первом запуске разреши доступ к микрофону.
+    </div>
+
+  </div>
+
+  <script>
+    const micBtn = document.getElementById('mic-btn');
+    const micStatus = document.getElementById('mic-status');
+    const output = document.getElementById('output');
+    const langSelect = document.getElementById('lang-select');
+    const errorBanner = document.getElementById('error-banner');
+    const copiedMsg = document.getElementById('copied-msg');
+
+    // Проверка поддержки браузером
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    let recognition = null;
+    let isRecording = false;
+    let finalText = '';
+
+    function showError(msg) {
+      errorBanner.textContent = msg;
+      errorBanner.classList.add('show');
+    }
+
+    if (!SpeechRecognition) {
+      showError('⚠️ Твой браузер не поддерживает распознавание речи. Открой эту страницу в Google Chrome или Microsoft Edge.');
+      micBtn.disabled = true;
+      micBtn.style.opacity = '0.4';
+      micStatus.textContent = 'Браузер не поддерживается';
+    } else {
+      setupRecognition();
+    }
+
+    function setupRecognition() {
+      recognition = new SpeechRecognition();
+      recognition.lang = langSelect.value;
+      recognition.continuous = true;      // не останавливаться после паузы
+      recognition.interimResults = true;  // показывать текст в реальном времени
+
+      recognition.onstart = () => {
+        isRecording = true;
+        micBtn.classList.add('recording');
+        micBtn.textContent = '⏹️';
+        micStatus.textContent = '🔴 Слушаю... говори';
+        micStatus.classList.add('active');
+        errorBanner.classList.remove('show');
+      };
+
+      recognition.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalText += transcript + ' ';
+          } else {
+            interim += transcript;
+          }
+        }
+        output.value = finalText + interim;
+      };
+
+      recognition.onerror = (event) => {
+        if (event.error === 'no-speech') {
+          micStatus.textContent = 'Не слышу речь, попробуй ещё раз';
+        } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          showError('⚠️ Доступ к микрофону запрещён. Разреши его в настройках браузера и обнови страницу.');
+          stopRecording();
+        } else if (event.error === 'aborted') {
+          // пользователь сам остановил — игнорируем
+        } else {
+          micStatus.textContent = 'Ошибка: ' + event.error;
+        }
+      };
+
+      recognition.onend = () => {
+        // Если всё ещё в режиме записи — перезапускаем (continuous иногда обрывается)
+        if (isRecording) {
+          try { recognition.start(); } catch (e) { /* уже запущен */ }
+        } else {
+          micBtn.classList.remove('recording');
+          micBtn.textContent = '🎤';
+          micStatus.textContent = 'Готово. Нажми "Скопировать"';
+          micStatus.classList.remove('active');
+        }
+      };
+    }
+
+    function startRecording() {
+      if (!recognition) return;
+      finalText = output.value ? output.value.trim() + ' ' : '';
+      recognition.lang = langSelect.value;
+      try {
+        recognition.start();
+      } catch (e) {
+        // уже запущен
+      }
+    }
+
+    function stopRecording() {
+      isRecording = false;
+      if (recognition) {
+        try { recognition.stop(); } catch (e) { /* ignore */ }
+      }
+      micBtn.classList.remove('recording');
+      micBtn.textContent = '🎤';
+      micStatus.classList.remove('active');
+    }
+
+    micBtn.addEventListener('click', () => {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    });
+
+    langSelect.addEventListener('change', () => {
+      if (recognition) recognition.lang = langSelect.value;
+      if (isRecording) {
+        stopRecording();
+        setTimeout(startRecording, 300);
+      }
+    });
+
+    function clearText() {
+      output.value = '';
+      finalText = '';
+    }
+
+    function copyText() {
+      const text = output.value.trim();
+      if (!text) {
+        micStatus.textContent = 'Сначала надиктуй текст';
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        copiedMsg.classList.add('show');
+        setTimeout(() => copiedMsg.classList.remove('show'), 2500);
+      }).catch(() => {
+        // запасной вариант
+        output.select();
+        document.execCommand('copy');
+        copiedMsg.classList.add('show');
+        setTimeout(() => copiedMsg.classList.remove('show'), 2500);
+      });
+    }
+  </script>
+</body>
+</html>
