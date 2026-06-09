@@ -1,0 +1,32 @@
+{
+  "_comment": "Copy this file to config.json and fill in your details",
+
+  "your_name": "Your Name",
+  "your_email": "you@gmail.com",
+  "niche": "fitness",
+  "platforms": ["TikTok", "Instagram"],
+  "followers": "50K",
+
+  "target_businesses": [
+    "fitness supplement brand",
+    "sportswear brand",
+    "workout equipment store",
+    "protein powder company",
+    "yoga accessories brand"
+  ],
+
+  "daily_limit": 50,
+  "delay_between_emails": 30,
+  "results_file": "results.csv",
+
+  "anthropic_api_key": "sk-ant-YOUR_KEY_HERE",
+
+  "_google_comment": "Optional — uses DuckDuckGo if not set",
+  "google_api_key": "",
+  "google_cx": "",
+
+  "_smtp_comment": "For Gmail: use an App Password, not your real password",
+  "smtp_host": "smtp.gmail.com",
+  "smtp_port": 465,
+  "smtp_password": "your-gmail-app-password"
+}
