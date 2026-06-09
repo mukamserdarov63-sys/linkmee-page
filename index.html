@@ -3,507 +3,1030 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LinkMe Tutorial Overlay</title>
+  <title>UGC Agent — Auto Brand Deal Outreach</title>
   <style>
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d14;
+      --card: #14141f;
+      --border: rgba(255,255,255,0.08);
+      --accent: #9f49ff;
+      --accent2: #ff39a7;
+      --green: #22d18e;
+      --yellow: #f5a623;
+      --red: #ff4d6d;
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+    }
 
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: transparent;
-      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
       overflow-x: hidden;
     }
 
-    body {
-      min-height: 100vh;
-    }
-
-    .page {
-      min-height: 100vh;
-      background: transparent;
-      position: relative;
-    }
-
-    .tutorial {
-      position: fixed;
-      left: 14px;
-      right: 14px;
-      top: 72px;
-      z-index: 9999;
-      background: rgba(0, 0, 0, 0.74);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.34);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 16px 16px 18px;
-      animation: fadeInUp 0.45s ease;
-    }
-
-    .tutorial.hidden {
-      display: none;
-    }
-
-    .tutorial-head {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .tutorial-title {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #fff;
-      text-align: center;
-    }
-
-    .close-btn {
-      position: absolute;
-      right: 0;
-      top: -4px;
-      width: 46px;
-      height: 46px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-    }
-
-    .slide {
-      position: relative;
-      height: 205px;
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      margin-bottom: 14px;
-    }
-
-    .slide-frame {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transform: scale(0.985);
-      transition: opacity 0.45s ease, transform 0.45s ease;
-    }
-
-    .slide-frame.active {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .demo-ui {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      background: linear-gradient(180deg, #efefef, #dcdcdc);
-      color: #111;
-      overflow: hidden;
-    }
-
-    .demo-topbar {
-      height: 38px;
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,20,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      height: 58px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 14px;
-      font-size: 22px;
-      font-weight: 700;
     }
 
-    .demo-url {
-      text-align: center;
-      font-size: 14px;
-      color: #6e6e6e;
-      margin-top: -4px;
-    }
-
-    .menu-sheet {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: white;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-      padding: 14px 18px 16px;
-      box-shadow: 0 -8px 24px rgba(0,0,0,0.18);
-    }
-
-    .menu-item {
-      padding: 12px 0;
+    .nav-logo {
       font-size: 18px;
-      border-bottom: 1px solid #ececec;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #111;
-    }
-
-    .menu-item:last-child {
-      border-bottom: none;
-    }
-
-    .highlight-copy {
-      background: rgba(255, 67, 67, 0.10);
-      border-radius: 10px;
-      padding-left: 6px;
-      padding-right: 6px;
       font-weight: 800;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
     }
 
-    .highlight-browser {
-      background: rgba(79, 122, 255, 0.10);
-      border-radius: 10px;
-      padding-left: 6px;
-      padding-right: 6px;
-      font-weight: 800;
-    }
-
-    .arrow-wrap {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      z-index: 5;
-      animation: floatArrow 1s ease-in-out infinite;
-    }
-
-    .arrow-label {
-      background: #ff2a2a;
+    .nav-badge {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
       color: white;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 5px 8px;
-      border-radius: 8px;
-      line-height: 1;
-      box-shadow: 0 8px 18px rgba(255,42,42,0.28);
-      white-space: nowrap;
+      letter-spacing: 0.4px;
     }
 
-    .arrow-shape {
-      color: #ff2a2a;
+    /* ── SECTIONS ── */
+    .section { padding: 32px 20px; max-width: 680px; margin: 0 auto; }
+
+    /* ── HERO ── */
+    .hero { text-align: center; padding: 48px 20px 32px; }
+
+    .hero-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 20px;
+      box-shadow: 0 16px 40px rgba(159,73,255,0.35);
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+
+    /* ── FEATURES LIST ── */
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .feature-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(159,73,255,0.3);
+    }
+
+    .feature-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .feature-text span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
       font-size: 28px;
       font-weight: 900;
       line-height: 1;
-      text-shadow: 0 8px 18px rgba(255,42,42,0.25);
     }
 
-    .arrow-dots {
-      right: 18px;
-      top: 38px;
-      transform: rotate(-8deg);
+    .stat-value.green { color: var(--green); }
+    .stat-value.purple { color: var(--accent); }
+    .stat-value.pink { color: var(--accent2); }
+    .stat-value.yellow { color: var(--yellow); }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
     }
 
-    .arrow-copy {
-      right: 48px;
-      top: 130px;
-      transform: rotate(-8deg);
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 8px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .arrow-browser {
-      right: 48px;
-      top: 92px;
-      transform: rotate(-8deg);
+    .tab-btn.active {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
     }
 
-    .check-wrap {
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    input, select, textarea {
       width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.86);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
     }
 
-    .check-circle {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      background: #98f4c5;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 68px;
-      font-weight: 900;
-      box-shadow: 0 0 36px rgba(152,244,197,0.32);
-      animation: popCheck 0.6s ease;
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
     }
 
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin: 6px 0 16px;
+    textarea { resize: vertical; min-height: 90px; }
+
+    select option { background: #1a1a2e; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: stepIn 0.55s forwards;
-    }
-
-    .step:nth-child(1) { animation-delay: 0.2s; }
-    .step:nth-child(2) { animation-delay: 0.45s; }
-    .step:nth-child(3) { animation-delay: 0.7s; }
-
-    .step-num {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(180deg, #ff3ab7, #a341ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 18px;
-      color: white;
-      flex: 0 0 auto;
-      box-shadow: 0 6px 16px rgba(195,70,255,0.35);
-    }
-
-    .step-text {
-      font-size: 16px;
+    .form-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
       line-height: 1.4;
-      color: white;
     }
 
-    .gotit-btn {
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
       width: 100%;
       border: none;
-      border-radius: 16px;
-      padding: 18px 16px;
-      font-size: 18px;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 16px;
       font-weight: 800;
-      color: white;
       cursor: pointer;
-      background: linear-gradient(90deg, #ff39a7, #9f49ff);
-      box-shadow: 0 8px 24px rgba(198,70,255,0.28);
-      animation: glowBtn 1.7s infinite alternate;
+      transition: all 0.2s;
     }
 
-    .progress {
-      margin-top: 12px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      overflow: hidden;
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: white;
+      box-shadow: 0 8px 24px rgba(159,73,255,0.3);
     }
 
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ff39a7, #9f49ff);
-      animation: loadBar 10s linear forwards;
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(159,73,255,0.4); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-green { background: rgba(34,209,142,0.15); color: var(--green); }
+    .badge-yellow { background: rgba(245,166,35,0.15); color: var(--yellow); }
+    .badge-red { background: rgba(255,77,109,0.15); color: var(--red); }
+    .badge-purple { background: rgba(159,73,255,0.15); color: var(--accent); }
+
+    /* ── LOG ── */
+    .log-box {
+      background: #080810;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      max-height: 320px;
+      overflow-y: auto;
+      color: #aaa;
+    }
+
+    .log-line { display: flex; gap: 10px; }
+    .log-time { color: #4a4a6a; flex-shrink: 0; }
+    .log-info { color: #7ab8ff; }
+    .log-ok { color: var(--green); }
+    .log-warn { color: var(--yellow); }
+    .log-err { color: var(--red); }
+
+    /* ── SETUP GUIDE ── */
+    .guide-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .guide-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .guide-card ol, .guide-card ul {
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    code {
+      background: rgba(159,73,255,0.12);
+      color: #c4a0ff;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: "SF Mono", monospace;
+      font-size: 12px;
+    }
+
+    .alert {
+      background: rgba(245,166,35,0.1);
+      border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--yellow);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* ── TOGGLE ── */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-info strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .toggle-info span { font-size: 12px; color: var(--muted); }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 99px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      left: 3px;
+      top: 3px;
+      transition: transform 0.3s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(18px);
+    }
+
+    /* ── SAVE STATUS ── */
+    .save-status {
+      text-align: center;
+      font-size: 13px;
+      color: var(--green);
+      height: 20px;
+      margin-top: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-status.show { opacity: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes stepIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes glowBtn {
-      from { box-shadow: 0 8px 24px rgba(198,70,255,0.20); }
-      to { box-shadow: 0 10px 32px rgba(255,57,167,0.38); }
-    }
-
-    @keyframes loadBar {
-      from { width: 0%; }
-      to { width: 100%; }
-    }
-
-    @keyframes floatArrow {
-      0%,100% { transform: translateY(0) rotate(-8deg); }
-      50% { transform: translateY(-6px) rotate(-8deg); }
-    }
-
-    @keyframes popCheck {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+    .feature-card { animation: fadeIn 0.4s ease both; }
+    .feature-card:nth-child(1) { animation-delay: 0.05s; }
+    .feature-card:nth-child(2) { animation-delay: 0.1s; }
+    .feature-card:nth-child(3) { animation-delay: 0.15s; }
+    .feature-card:nth-child(4) { animation-delay: 0.2s; }
+    .feature-card:nth-child(5) { animation-delay: 0.25s; }
+    .feature-card:nth-child(6) { animation-delay: 0.3s; }
 
     @media (max-width: 430px) {
-      .tutorial {
-        left: 10px;
-        right: 10px;
-        top: 62px;
-      }
-
-      .slide {
-        height: 186px;
-      }
-
-      .tutorial-title {
-        font-size: 15px;
-      }
-
-      .step-text {
-        font-size: 15px;
-      }
-
-      .arrow-label {
-        font-size: 12px;
-        padding: 4px 7px;
-      }
-
-      .arrow-shape {
-        font-size: 24px;
-      }
-
-      .arrow-browser,
-      .arrow-copy {
-        right: 36px;
-      }
+      .hero h1 { font-size: 24px; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="tutorial" id="tutorial">
-      <div class="tutorial-head">
-        <div class="tutorial-title">FOLLOW THE TUTORIAL 👇</div>
-        <button class="close-btn" id="closeBtn">×</button>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">UGC Agent</div>
+    <div class="nav-badge">AI POWERED</div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero section">
+    <div class="hero-icon">🤖</div>
+    <h1>Your 24/7 <span>Brand Deal</span><br>AI Agent</h1>
+    <p>Automatically finds brands in your niche, extracts their emails, and sends personalized pitches — while you create content.</p>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-num">1</div>
+      <div class="feature-text">
+        <strong>Set your targets</strong>
+        <span>Tell the agent your niche and brand types. That's it.</span>
       </div>
-
-      <div class="slide">
-        <!-- 1: tap dots -->
-        <div class="slide-frame active" id="frame1">
-          <div class="demo-ui">
-            <div class="demo-topbar">
-              <span>←</span>
-              <span>×</span>
-              <span>⋯</span>
-            </div>
-            <div class="demo-url">link page</div>
-
-            <div class="arrow-wrap arrow-dots">
-              <div class="arrow-label">HERE</div>
-              <div class="arrow-shape">➜</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2: copy link -->
-        <div class="slide-frame" id="frame2">
-          <div class="demo-ui">
-            <div class="demo-topbar">
-              <span>←</span>
-              <span>×</span>
-              <span>⋯</span>
-            </div>
-            <div class="demo-url">link page</div>
-
-            <div class="menu-sheet">
-              <div class="menu-item">⚑ Report</div>
-              <div class="menu-item">🌐 Open in browser</div>
-              <div class="menu-item"><span class="highlight-copy">🔗 Copy Link</span></div>
-            </div>
-
-            <div class="arrow-wrap arrow-copy">
-              <div class="arrow-label">HERE</div>
-              <div class="arrow-shape">➜</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3: open in browser -->
-        <div class="slide-frame" id="frame3">
-          <div class="demo-ui">
-            <div class="demo-topbar">
-              <span>←</span>
-              <span>×</span>
-              <span>⋯</span>
-            </div>
-            <div class="demo-url">link page</div>
-
-            <div class="menu-sheet">
-              <div class="menu-item">⚑ Report</div>
-              <div class="menu-item"><span class="highlight-browser">🌐 Open in browser</span></div>
-              <div class="menu-item">🔗 Copy Link</div>
-            </div>
-
-            <div class="arrow-wrap arrow-browser">
-              <div class="arrow-label">HERE</div>
-              <div class="arrow-shape">➜</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4: done -->
-        <div class="slide-frame" id="frame4">
-          <div class="check-wrap">
-            <div class="check-circle">✓</div>
-          </div>
-        </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">2</div>
+      <div class="feature-text">
+        <strong>Automated sourcing</strong>
+        <span>AI scrapes Google, TikTok, Instagram for matching brands.</span>
       </div>
-
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-text">Tap the 3 dots</div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-text">Choose "Copy Link"</div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-text">Paste it or open in browser</div>
-        </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">3</div>
+      <div class="feature-text">
+        <strong>Email extraction</strong>
+        <span>Finds direct contact email from each brand's website.</span>
       </div>
-
-      <button class="gotit-btn" id="gotItBtn">GOT IT</button>
-      <div class="progress">
-        <div class="progress-bar"></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">4</div>
+      <div class="feature-text">
+        <strong>AI-written outreach</strong>
+        <span>Claude AI writes a unique, personalized pitch for every brand.</span>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">5</div>
+      <div class="feature-text">
+        <strong>Mass scaling</strong>
+        <span>Send up to 3,000 emails/day. Fully adjustable.</span>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">6</div>
+      <div class="feature-text">
+        <strong>Live tracking</strong>
+        <span>Every result logged to CSV / Google Sheets in real time.</span>
       </div>
     </div>
   </div>
 
+  <!-- DASHBOARD SECTION -->
+  <div class="section" style="margin-top: 32px;">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('stats', this)">Dashboard</button>
+      <button class="tab-btn" onclick="switchTab('config', this)">Configure</button>
+      <button class="tab-btn" onclick="switchTab('results', this)">Results</button>
+      <button class="tab-btn" onclick="switchTab('setup', this)">Setup</button>
+    </div>
+
+    <!-- TAB: DASHBOARD -->
+    <div class="tab-panel active" id="tab-stats">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Brands Found</div>
+          <div class="stat-value purple" id="stat-found">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Emails Found</div>
+          <div class="stat-value yellow" id="stat-emails">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sent Today</div>
+          <div class="stat-value green" id="stat-sent">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Success Rate</div>
+          <div class="stat-value pink" id="stat-rate">—</div>
+        </div>
+      </div>
+
+      <div class="section-title">Agent Status</div>
+
+      <div class="toggle-wrap">
+        <div class="toggle-info">
+          <strong>Dry Run Mode</strong>
+          <span>Find & generate emails without sending</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-dryrun" checked onchange="saveSetting('dryRun', this.checked)" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-wrap">
+        <div class="toggle-info">
+          <strong>Auto-delay</strong>
+          <span>Wait between sends to avoid spam filters</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-delay" checked onchange="saveSetting('autoDelay', this.checked)" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <div class="section-title">Activity Log</div>
+        <div class="log-box" id="log-box">
+          <div class="log-line"><span class="log-time">--:--:--</span><span class="log-info">UGC Agent ready. Configure your settings and run agent.py.</span></div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top: 16px;">
+        <button class="btn btn-outline" onclick="clearLog()">Clear Log</button>
+        <button class="btn btn-primary" onclick="generateConfig()">Download Config</button>
+      </div>
+    </div>
+
+    <!-- TAB: CONFIG -->
+    <div class="tab-panel" id="tab-config">
+      <div class="section-title">Your Profile</div>
+
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="cfg-name" placeholder="e.g. Sofia" oninput="saveSetting('name', this.value)" />
+      </div>
+
+      <div class="form-group">
+        <label>Your Email</label>
+        <input type="email" id="cfg-email" placeholder="you@gmail.com" oninput="saveSetting('email', this.value)" />
+        <div class="form-hint">Replies from brands will come here</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Niche</label>
+          <select id="cfg-niche" onchange="saveSetting('niche', this.value)">
+            <option value="fitness">Fitness</option>
+            <option value="beauty">Beauty</option>
+            <option value="fashion">Fashion</option>
+            <option value="food">Food &amp; Drink</option>
+            <option value="tech">Tech &amp; Gadgets</option>
+            <option value="travel">Travel</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="gaming">Gaming</option>
+            <option value="pets">Pets</option>
+            <option value="home">Home &amp; Decor</option>
+            <option value="baby">Baby &amp; Kids</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Followers</label>
+          <input type="text" id="cfg-followers" placeholder="e.g. 50K" oninput="saveSetting('followers', this.value)" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Platforms</label>
+        <input type="text" id="cfg-platforms" placeholder="TikTok, Instagram, YouTube" oninput="saveSetting('platforms', this.value)" />
+      </div>
+
+      <div class="section-title" style="margin-top: 8px;">Target Brands</div>
+
+      <div class="form-group">
+        <label>Brand Types to Target</label>
+        <textarea id="cfg-targets" rows="4" placeholder="fitness supplement brand&#10;sportswear brand&#10;protein powder company" oninput="saveSetting('targets', this.value)"></textarea>
+        <div class="form-hint">One per line. Be specific for better results.</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Daily Limit</label>
+          <input type="number" id="cfg-limit" value="50" min="1" max="3000" oninput="saveSetting('limit', this.value)" />
+        </div>
+        <div class="form-group">
+          <label>Delay (seconds)</label>
+          <input type="number" id="cfg-delay" value="30" min="5" oninput="saveSetting('delay', this.value)" />
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top: 8px;">API Keys</div>
+
+      <div class="form-group">
+        <label>Anthropic API Key</label>
+        <input type="password" id="cfg-anthropic" placeholder="sk-ant-..." oninput="saveSetting('anthropic', this.value)" />
+        <div class="form-hint">For AI-written personalized emails. Get free at console.anthropic.com</div>
+      </div>
+
+      <div class="section-title" style="margin-top: 8px;">Gmail SMTP</div>
+
+      <div class="form-group">
+        <label>Gmail App Password</label>
+        <input type="password" id="cfg-smtp-pass" placeholder="xxxx xxxx xxxx xxxx" oninput="saveSetting('smtpPass', this.value)" />
+        <div class="form-hint">Create at: Google Account → Security → App passwords</div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top: 8px;" onclick="generateConfig()">
+        Download config.json
+      </button>
+      <div class="save-status" id="save-status">Config downloaded!</div>
+    </div>
+
+    <!-- TAB: RESULTS -->
+    <div class="tab-panel" id="tab-results">
+      <div class="alert">
+        Load your <code>results.csv</code> file to see all outreach results here.
+      </div>
+
+      <div class="form-group">
+        <label>Load results.csv</label>
+        <input type="file" id="csv-upload" accept=".csv" onchange="loadCSV(this)" style="padding: 10px 14px;" />
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
+            <tr>
+              <td colspan="4" style="text-align:center; color: var(--muted); padding: 28px;">
+                No results yet. Run agent.py then load results.csv
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB: SETUP -->
+    <div class="tab-panel" id="tab-setup">
+      <div class="guide-card">
+        <h3>🐍 1. Install Python dependencies</h3>
+        <ol>
+          <li>Make sure Python 3.11+ is installed</li>
+          <li>Open terminal in the <code>agent/</code> folder</li>
+          <li>Run: <code>pip install -r requirements.txt</code></li>
+        </ol>
+      </div>
+
+      <div class="guide-card">
+        <h3>⚙️ 2. Create your config</h3>
+        <ol>
+          <li>Fill in the <strong>Configure</strong> tab above</li>
+          <li>Click <strong>Download config.json</strong></li>
+          <li>Move the file to the <code>agent/</code> folder</li>
+        </ol>
+      </div>
+
+      <div class="guide-card">
+        <h3>📧 3. Gmail App Password</h3>
+        <ol>
+          <li>Go to <strong>myaccount.google.com</strong></li>
+          <li>Security → 2-Step Verification → App passwords</li>
+          <li>Create one for "Mail" and paste it in Configure tab</li>
+        </ol>
+      </div>
+
+      <div class="guide-card">
+        <h3>🤖 4. Get Anthropic API key (free)</h3>
+        <ol>
+          <li>Sign up at <strong>console.anthropic.com</strong></li>
+          <li>Create an API key</li>
+          <li>Paste it in the Configure tab</li>
+          <li>Without key: agent uses a built-in email template</li>
+        </ol>
+      </div>
+
+      <div class="guide-card">
+        <h3>🚀 5. Run the agent</h3>
+        <ul>
+          <li>Test run (no emails sent): <code>python agent.py --dry-run</code></li>
+          <li>Real run: <code>python agent.py</code></li>
+          <li>Custom config: <code>python agent.py --config myconfig.json</code></li>
+          <li>View log: <code>cat agent.log</code></li>
+          <li>View results: open <code>results.csv</code> in Excel / Google Sheets</li>
+        </ul>
+      </div>
+
+      <div class="alert">
+        Always test with <code>--dry-run</code> first! Check results.csv to confirm the agent is finding the right brands before enabling real sends.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    UGC Agent — AI-powered brand deal outreach
+  </footer>
+
   <script>
-    const tutorial = document.getElementById('tutorial');
-    const closeBtn = document.getElementById('closeBtn');
-    const gotItBtn = document.getElementById('gotItBtn');
+    /* ── STATE ── */
+    const STATE_KEY = 'ugcagent_state';
 
-    const frames = [
-      document.getElementById('frame1'),
-      document.getElementById('frame2'),
-      document.getElementById('frame3'),
-      document.getElementById('frame4')
-    ];
-
-    function showFrame(index) {
-      frames.forEach(frame => frame.classList.remove('active'));
-      frames[index].classList.add('active');
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); } catch { return {}; }
     }
 
-    function closeTutorial() {
-      tutorial.classList.add('hidden');
+    function saveState(update) {
+      const s = { ...loadState(), ...update };
+      localStorage.setItem(STATE_KEY, JSON.stringify(s));
     }
 
-    closeBtn.addEventListener('click', closeTutorial);
-    gotItBtn.addEventListener('click', closeTutorial);
+    function saveSetting(key, value) {
+      saveState({ [key]: value });
+    }
 
-    setTimeout(() => showFrame(1), 2500); // copy link
-    setTimeout(() => showFrame(2), 5000); // open in browser
-    setTimeout(() => showFrame(3), 7600); // done
-    setTimeout(() => closeTutorial(), 10000); // close
+    /* ── RESTORE FORM ── */
+    function restoreForm() {
+      const s = loadState();
+      const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+      const setChk = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.checked = val; };
+
+      set('cfg-name', s.name);
+      set('cfg-email', s.email);
+      set('cfg-niche', s.niche);
+      set('cfg-followers', s.followers);
+      set('cfg-platforms', s.platforms);
+      set('cfg-targets', s.targets);
+      set('cfg-limit', s.limit ?? 50);
+      set('cfg-delay', s.delay ?? 30);
+      set('cfg-anthropic', s.anthropic);
+      set('cfg-smtp-pass', s.smtpPass);
+      setChk('toggle-dryrun', s.dryRun !== false);
+      setChk('toggle-delay', s.autoDelay !== false);
+    }
+
+    /* ── TABS ── */
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    /* ── LOG ── */
+    function addLog(msg, type = 'info') {
+      const box = document.getElementById('log-box');
+      const time = new Date().toTimeString().slice(0, 8);
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.innerHTML = `<span class="log-time">${time}</span><span class="log-${type}">${msg}</span>`;
+      box.appendChild(line);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function clearLog() {
+      document.getElementById('log-box').innerHTML = '';
+    }
+
+    /* ── CONFIG DOWNLOAD ── */
+    function generateConfig() {
+      const s = loadState();
+      const platforms = (s.platforms || 'TikTok, Instagram')
+        .split(',').map(p => p.trim()).filter(Boolean);
+      const targets = (s.targets || 'fitness supplement brand\nsportswear brand')
+        .split('\n').map(t => t.trim()).filter(Boolean);
+
+      const cfg = {
+        your_name: s.name || 'Your Name',
+        your_email: s.email || 'you@gmail.com',
+        niche: s.niche || 'fitness',
+        platforms,
+        followers: s.followers || '10K',
+        target_businesses: targets,
+        daily_limit: parseInt(s.limit) || 50,
+        delay_between_emails: parseInt(s.delay) || 30,
+        results_file: 'results.csv',
+        anthropic_api_key: s.anthropic || '',
+        google_api_key: '',
+        google_cx: '',
+        smtp_host: 'smtp.gmail.com',
+        smtp_port: 465,
+        smtp_password: s.smtpPass || '',
+      };
+
+      const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      const status = document.getElementById('save-status');
+      status.classList.add('show');
+      setTimeout(() => status.classList.remove('show'), 2500);
+
+      addLog('config.json generated and downloaded', 'ok');
+    }
+
+    /* ── CSV LOADER ── */
+    function loadCSV(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        const lines = e.target.result.trim().split('\n');
+        if (lines.length < 2) return;
+
+        const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+        const rows = lines.slice(1).map(line => {
+          const vals = parseCSVLine(line);
+          const row = {};
+          headers.forEach((h, i) => { row[h] = vals[i] || ''; });
+          return row;
+        });
+
+        renderResults(rows);
+        updateStats(rows);
+        addLog(`Loaded ${rows.length} results from ${file.name}`, 'ok');
+      };
+      reader.readAsText(file);
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let cur = '', inQuote = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQuote = !inQuote; }
+        else if (ch === ',' && !inQuote) { result.push(cur.trim()); cur = ''; }
+        else { cur += ch; }
+      }
+      result.push(cur.trim());
+      return result;
+    }
+
+    function renderResults(rows) {
+      const tbody = document.getElementById('results-body');
+      tbody.innerHTML = rows.slice(0, 200).map(r => {
+        const status = r.status || '';
+        const badge = statusBadge(status);
+        const name = escHtml(r.business_name || '—');
+        const email = escHtml(r.email || '—');
+        const date = (r.sent_at || '').slice(0, 10);
+        return `<tr>
+          <td>${name}</td>
+          <td>${email}</td>
+          <td>${badge}</td>
+          <td>${date}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function statusBadge(status) {
+      const map = {
+        sent: ['green', 'Sent'],
+        dry_run: ['purple', 'Dry Run'],
+        no_email: ['yellow', 'No Email'],
+        send_failed: ['red', 'Failed'],
+        gen_error: ['red', 'Error'],
+        error: ['red', 'Error'],
+      };
+      const [cls, label] = map[status] || ['yellow', status || '?'];
+      return `<span class="badge badge-${cls}">${label}</span>`;
+    }
+
+    function updateStats(rows) {
+      const sent = rows.filter(r => r.status === 'sent').length;
+      const emails = rows.filter(r => r.email).length;
+      const total = rows.length;
+      const rate = total > 0 ? Math.round((sent / total) * 100) + '%' : '—';
+
+      document.getElementById('stat-found').textContent = total;
+      document.getElementById('stat-emails').textContent = emails;
+      document.getElementById('stat-sent').textContent = sent;
+      document.getElementById('stat-rate').textContent = rate;
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    /* ── INIT ── */
+    restoreForm();
+    addLog('Dashboard loaded. Go to Configure tab to set up your agent.', 'info');
   </script>
 </body>
 </html>
